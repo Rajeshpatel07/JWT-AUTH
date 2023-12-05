@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="page.css">
+    <title>JWT</title>
+</head>
+<body>
+    <h1>JWT AUTH</h1>
+    <div class="box">
+        <form>
+            <h2>Signup</h2>
+            <br>
+            <br>
+            <label for="email">Email</label>
+            <br>    
+            <input type="text" id="email" name="email" autocomplete="off">
+            <br>
+            <section id="emailerror"></section>
+            <label for="password">Password</label>
+            <br>    
+            <input type="password" id="password" name="password">
+            <br>
+            <section id="passworderror"></section>
+            <br>
+            <button>submit</button>
+        </form>
+    </div>
+
+    <script>
+
+        const form=document.querySelector('form')
+
+        const emailerror=document.getElementById('emailerror');
+        const passworderror=document.getElementById('passworderror')
+
+        
+        form.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+
+            //reset errors
+            emailerror.innerHTML='';
+            passworderror.innerHTML='';
+
+            //values of the form.
+            const email=form.email.value;
+            const password=form.password.value;
+
+            try{
+                const res=await fetch('/signup',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({email:email,password:password})
+                })
+
+                const data=await res.json();
+
+                // console.log(data)
+                // console.log(data.user);
+                
+                if(data.errors){
+                    emailerror.innerHTML=data.errors.email;
+                    passworderror.innerHTML=data.errors.password;
+                }
+                if(data.user){
+                    location.assign('/login');
+                }
+            }catch(err){
+                console.log(err);
+            }
+            
+        })
+        
+    </script>
+</body>
+</html>
