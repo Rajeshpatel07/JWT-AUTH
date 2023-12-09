@@ -33,6 +33,12 @@ userSchema.pre('save',async function(next){
 
 //It will run After the user is saved.
 userSchema.statics.login = async function(email, password) {
+  if(!email){
+    throw new Error("Please Enter Email")
+  }
+  if(!password){
+    throw new Error('Please Enter Password')
+  }
     const userdata = await this.findOne({ email });
     if (userdata) {
       const userpass = await bcrypt.compare(password, userdata.password);

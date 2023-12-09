@@ -5,7 +5,7 @@ const jwt= require('jsonwebtoken');
 
 
 const handleError=(err)=>{
-    // console.log(err.message,err.code) //printing the error message and code
+    console.log(err.message,err.code) //printing the error message and code
     let error={email:'',password:''}; //creating a object
 
     
@@ -14,6 +14,18 @@ const handleError=(err)=>{
         error.email='The username is already registered'
         return error;
     }
+    //Handling not enter email login page
+    if(err.message==='Please Enter Email'){
+        error.email='Please Enter Email'
+        return error;
+    }
+
+    //Handling not enter password login page
+    if(err.message==='Please Enter Password'){
+        error.password='Please Enter Password';
+        return error;
+    }
+
 
     //Login route error handle
     if(err.message=='The Email is not Registered'){
@@ -85,8 +97,9 @@ const login_post=async (req,res)=>{
         res.cookie('jwt',accesstoken,{httpOnly:true});
         res.json({user:user._id})
     }catch(err){
+        console.log(err)
         const errors=handleError(err);
-        // console.log(errors);
+        console.log(errors);
         res.json({errors});
     }
 }
